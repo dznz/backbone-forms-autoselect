@@ -1,0 +1,41 @@
+<!--
+  TESTS FOR DEVELOPMENT
+  These use the individual source files. Use this while developing
+-->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <link rel="stylesheet" href="lib/qunit.css" type="text/css" media="screen" />
+
+  <!-- TEST LIB FILES -->
+  <script type="text/javascript" src="lib/qunit.js"></script>
+  <script type="text/javascript" src="lib/sinon.js"></script>
+  
+  <!-- SRC LIB FILES -->
+  <script src="lib/jquery.js"></script>
+  <script src="lib/jquery/jquery.ui.core.js"></script>
+  <script src="lib/jquery/jquery.ui.widget.js"></script>
+  <script src="lib/jquery/jquery.ui.position.js"></script>
+  <script src="lib/jquery/jquery.autocomplete.js"></script>
+  <script src="lib/bootstrap-tooltip.js"></script>
+
+  <script src="lib/underscore-1.4.4.js"></script>
+  <script src="lib/backbone-1.0.0.js"></script>
+  <script src="lib/backbone-forms.js"></script>
+
+  <!-- SOURCE FILES -->
+  <script src="../src/editors/autoselect.js"></script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+    <div id='testElement'>
+      <h1>Test</h1>
+    </div>
+  </div>
+
+  <!-- Editors -->
+  <script src="editors/autoselect.js"></script>
+</body>
+</html>
