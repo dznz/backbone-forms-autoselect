@@ -7,7 +7,7 @@
   test('Default type is text', function() {
     var editor = new Editor().render();
 
-    equal($(editor.el).attr('type'), 'text');
+    deepEqual($(editor.el).attr('type'), 'text');
   });
 
   test('Has an autocomplete', function() {
@@ -18,7 +18,40 @@
     ok(option.focus, 'with a focus');
     ok(option.select, 'with a select');
     ok(option.search, 'with a search');
-    // debugger
+  });
+
+  test('select event calls out', function() {
+    var options = {select: sinon.spy()}
+    var editor = new Editor(options).render();
+    sinon.stub(editor, 'setValue');
+
+    var ac = editor.$el.data('autocomplete');
+    var result = ac.options.select('foo', {item: {id: 1, title: 'foo'}});
+
+    ok(!result, 'select does not propagate');
+    ok(editor.setValue.called, 'called setValue');
+    ok(options.select.called, 'passed in select was called');
+  });
+
+  test('focus event customised', function() {
+    var editor = new Editor().render();
+    var ac = editor.$el.data('autocomplete');
+    var longTitle = (new Array(40)).join('A');
+
+    var result = ac.options.focus('foo', {item: {title: longTitle}});
+
+    deepEqual(result, false, 'focus does not propagate');
+    deepEqual(editor.$el.val(), longTitle, 'val changed to title');
+  });
+
+  test('search deselects the stored value', function() {
+    var editor = new Editor().render();
+    var ac = editor.$el.data('autocomplete');
+    sinon.stub(editor, 'deselectValue');
+
+    ac.options.search('foo', {});
+
+    ok(editor.deselectValue.called);
   });
 
   module('AutoSelect#search', {
@@ -67,20 +100,20 @@
   });
 
   test('Default value', function() {
-    equal(this.editor.getValue(), undefined);
+    deepEqual(this.editor.getValue(), null, 'is null');
   });
 
   test('When unselected', function() {
     this.editor.selectedValue = null
     this.editor.$el.val('foo')
 
-    equal(this.editor.getValue(), null);
+    deepEqual(this.editor.getValue(), null);
   });
 
   test('when selected', function() {
     this.editor.setValue({id: 1, title: 'foo'});
 
-    equal(this.editor.getValue(), 1)
+    deepEqual(this.editor.getValue(), 1)
   })
 
   module('AutoSelect#setValue()', {
@@ -93,14 +126,14 @@
   test('sets value and text', function() {
     this.editor.setValue(this.item);
 
-    equal(this.editor.$el.val(), this.item.title, 'sets the text');
-    equal(this.editor.getValue(), this.item.id, 'sets the id');
+    deepEqual(this.editor.$el.val(), this.item.title, 'sets the text');
+    deepEqual(this.editor.getValue(), this.item.id, 'sets the id');
   });
 
   test('sets jQuery autocompleteSelected data value', function() {
     this.editor.setValue(this.item);
 
-    equal(this.editor.$el.data('autocompleteSelected'), this.item.id);
+    deepEqual(this.editor.$el.data('autocompleteSelected'), this.item.id);
   });
 
   test('sets selected class', function() {
@@ -113,13 +146,13 @@
     this.item.title = (new Array(40)).join('A');
     this.editor.setValue(this.item);
 
-    equal(this.editor.$el.val().length, 35);
+    deepEqual(this.editor.$el.val().length, 35);
   });
 
   test('trims whitespace', function() {
     this.item.title = 'foo   ';
     this.editor.setValue(this.item);
-    equal(this.editor.$el.val(), 'foo');
+    deepEqual(this.editor.$el.val(), 'foo');
   });
 
   test('calls validation', function() {
@@ -140,8 +173,8 @@
 
     editor.deselectValue();
 
-    equal(editor.selectedValue, null, 'unset selectedValue');
-    equal(editor.$el.data('autocompleteSelected'), null, 'unset autocompleteSelected data');
+    deepEqual(editor.selectedValue, null, 'unset selectedValue');
+    deepEqual(editor.$el.data('autocompleteSelected'), null, 'unset autocompleteSelected data');
     ok(!editor.$el.hasClass('autocomplete-selected'), 'removes the selected class');
   });
 
@@ -199,23 +232,23 @@
     }
   });
 
-  test('gives focus to editor and its input', function() {
-    this.editor.focus();
+  // test('gives focus to editor and its input', function() {
+  //   this.editor.focus();
 
-    ok(this.editor.hasFocus);
-    ok(this.editor.$el.is(':focus'));
-  });
+  //   ok(this.editor.hasFocus);
+  //   ok(this.editor.$el.is(':focus'));
+  // });
 
-  test('triggers the "focus" event', function() {
-    var editor = this.editor,
-        spy = this.sinon.spy();
+  // test('triggers the "focus" event', function() {
+  //   var editor = this.editor,
+  //       spy = this.sinon.spy();
 
-    editor.on('focus', spy);
+  //   editor.on('focus', spy);
 
-    editor.focus();
+  //   editor.focus();
 
-    ok(spy.called);
-    ok(spy.calledWith(editor));
-  });
+  //   ok(spy.called);
+  //   ok(spy.calledWith(editor));
+  // });
 
 })(Backbone.Form, Backbone.Form.editors.AutoSelect);
