@@ -251,4 +251,26 @@
   //   ok(spy.calledWith(editor));
   // });
 
+  module('AutoSelect#onKeypress()');
+
+  test('keypress bubbles', function() {
+    var editor = new Editor().render();
+
+    ok(editor.onKeypress('press'), 'returns true');
+  });
+
+  module('AutoSelect#blur');
+
+  asyncTest('blur calls validation', 1, function() {
+    var editor = new Editor({autoselectBlurTimeout: 1}).render();
+    sinon.stub(editor, 'handleValidation');
+
+    editor.onBlur('blur')
+
+    setTimeout(function() {
+      ok(editor.handleValidation.called);
+      start();
+    }, 2);
+  });
+
 })(Backbone.Form, Backbone.Form.editors.AutoSelect);
