@@ -194,14 +194,10 @@
 
   test('if value not selected', function() {
     this.editor.$el.val('foo')
-    // sinon.stub(this.editor.$el, 'tooltip')
 
     this.editor.handleValidation();
 
     ok(this.editor.$el.hasClass('autocomplete-error'), 'add error class');
-    // ok('enable tooltip', this.editor.$el.tooltip.called);
-
-    // this.editor.$el.tooltip.restore();
   });
 
   test('removes error class if value selected', function() {
@@ -212,44 +208,6 @@
 
     ok(!this.editor.$el.hasClass('autocomplete-error'));
   });
-
-  module('AutoSelect#focus', {
-    setup: function() {
-      this.sinon = sinon.sandbox.create();
-
-      this.editor = new Editor().render();
-
-      //jQuery events only triggered when element is on the page
-      //TODO: Stub methods so we don't need to add to the page
-      $('body').append(this.editor.el);
-    },
-
-    teardown: function() {
-      this.sinon.restore();
-      
-      //Remove the editor from the page
-      this.editor.remove();
-    }
-  });
-
-  // test('gives focus to editor and its input', function() {
-  //   this.editor.focus();
-
-  //   ok(this.editor.hasFocus);
-  //   ok(this.editor.$el.is(':focus'));
-  // });
-
-  // test('triggers the "focus" event', function() {
-  //   var editor = this.editor,
-  //       spy = this.sinon.spy();
-
-  //   editor.on('focus', spy);
-
-  //   editor.focus();
-
-  //   ok(spy.called);
-  //   ok(spy.calledWith(editor));
-  // });
 
   module('AutoSelect#onKeypress()');
 
