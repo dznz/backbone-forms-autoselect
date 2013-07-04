@@ -25,7 +25,7 @@
     var itemTemplate = Hogan.compile("<li><a>{{title}}</a></li>");
     var as = new Backbone.Form.editors.AutoSelect({
       schema: {
-        sourceUrl: "http://localhost:3000/cloud/teams.json",
+        sourceUrl: "/test/manual_test_data.json",
         itemTemplate: itemTemplate
       }
     }).render();
