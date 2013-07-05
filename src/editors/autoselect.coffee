@@ -25,14 +25,12 @@
       true
 
     onBlur: (event) ->
-      _this = this
-      setTimeout (->
-        _this.handleValidation()
-      ), _this.blurTimeout
+      setTimeout (=>
+        @handleValidation()
+      ), @blurTimeout
       true
 
     initialize: (options) ->
-      _this = this
       options = options or {}
       Form.editors.Text::initialize.call this, options
       @blurTimeout = options.autoselectBlurTimeout or @constructor.blurTimeout
@@ -42,36 +40,35 @@
         minLength: 2
       , options.schema or {})
       @$el.autocomplete
-        source: (request, callback) ->
-          _this.handleSearch request, callback
+        source: (request, callback) =>
+          @handleSearch request, callback
 
         minLength: @schema.minLength
-        focus: (event, ui) ->
-          _this.$el.val ui.item.title
+        focus: (event, ui) =>
+          @$el.val ui.item.title
           false
 
-        select: (event, ui) ->
-          _this.setValue ui.item
-          _this.options.select event, ui, _this.$el  if _this.options.select
+        select: (event, ui) =>
+          @setValue ui.item
+          @options.select event, ui, @$el  if @options.select
           false
 
-        search: (event, ui) ->
-          _this.deselectValue()
+        search: (event, ui) =>
+          @deselectValue()
 
       if @schema.itemTemplate
-        @$el.data("autocomplete")._renderItem = (parent, item) ->
-          html = _this.schema.itemTemplate.render(item)
+        @$el.data("autocomplete")._renderItem = (parent, item) =>
+          html = @schema.itemTemplate.render(item)
           $(html).data("item.autocomplete", item).appendTo parent
 
     handleSearch: (request, callback) ->
-      _this = this
-      _this.$el.addClass "autocomplete-loading"
-      $.getJSON _this.schema.sourceUrl,
+      @$el.addClass "autocomplete-loading"
+      $.getJSON @schema.sourceUrl,
         search:
           q: request.term
-      , (data, status, jqXHR) ->
+      , (data, status, jqXHR) =>
         items = data.items
-        _this.$el.removeClass "autocomplete-loading"
+        @$el.removeClass "autocomplete-loading"
         callback items
 
 
