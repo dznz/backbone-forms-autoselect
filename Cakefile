@@ -13,6 +13,13 @@ task 'build', 'Build dist/ from src/', (options) ->
   coffee.stdout.on 'data', (data) ->
     print data.toString()
 
+task 'doc', 'Build the documentation', (options) ->
+  docco = spawn 'docco', ["src/editors/autoselect.coffee"]
+  docco.stderr.on 'data', (data) ->
+    process.stderr.write data.toString()
+  docco.stdout.on 'data', (data) ->
+    print data.toString()
+
 task 'watch', 'Watch src/ for changes', (options) ->
   coffee = spawn 'coffee', ['--watch', '--compile', '--bare', '--output', options.output? or DEFAULT_OUTPUT_DIR, 'src']
   coffee.stderr.on 'data', (data) ->
