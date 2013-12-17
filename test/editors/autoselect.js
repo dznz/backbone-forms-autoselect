@@ -93,6 +93,21 @@
     ok(this.callback.calledWith(items), 'called with data');
   });
 
+  module('AutoSelect#sourceUrl()', {
+    setup: function() {
+      this.editor = new Editor().render();
+    }
+  });
+
+  test('uses the schema.sourceUrl', function() {
+    this.editor.schema = {sourceUrl: 'foo'}
+    deepEqual(this.editor.sourceUrl(), this.editor.schema.sourceUrl)
+  })
+
+  test('default value', function() {
+    deepEqual(this.editor.sourceUrl(), "", "is an empty string")
+  });
+
   module('AutoSelect#getValue()', {
     setup: function() {
       this.editor = new Editor().render();
