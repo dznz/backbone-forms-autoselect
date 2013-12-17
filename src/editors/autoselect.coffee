@@ -49,9 +49,7 @@
           false
 
         select: (event, ui) =>
-          @setValue ui.item
-          @options.select event, ui, @$el  if @options.select
-          false
+          @selectItem event, ui
 
         search: (event, ui) =>
           @deselectValue()
@@ -63,7 +61,7 @@
 
     handleSearch: (request, callback) ->
       @$el.addClass "autocomplete-loading"
-      $.getJSON @schema.sourceUrl,
+      $.getJSON @sourceUrl,
         search:
           q: request.term
       , (data, status, jqXHR) =>
@@ -71,16 +69,29 @@
         @$el.removeClass "autocomplete-loading"
         callback items
 
+    sourceUrl: -> @schema?.sourceUrl or ''
+
+    selectItem: (event, ui) ->
+      @setValue ui.item
+      @options.select event, ui, @$el if @options.select
+      false
 
     getValue: ->
       @selectedValue
 
     setValue: (item) ->
       @selectedValue = item.id
-      value = $.trim(item.title)
-      value = value.substring(0, 32).trim(this) + "..."  if value.length > 32
-      @$el.data("autocompleteSelected", item.id).addClass("autocomplete-selected").val value
+      displayText = @formatItemText item
+      @$el.data("autocompleteSelected", item.id).addClass("autocomplete-selected").val displayText
+      @$el.attr 'title', @getItemText(item)
       @handleValidation()
+
+    formatItemText: (item) ->
+      value = $.trim @getItemText(item)
+      value = value.substring(0, 32).trim(this) + "..."  if value.length > 32
+      value
+
+    getItemText: (item) -> item.title
 
     handleValidation: ->
       if @$el.val() and (@selectedValue is null)
